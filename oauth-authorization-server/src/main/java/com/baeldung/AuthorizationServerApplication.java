@@ -1,10 +1,10 @@
-package com.baeldung.config;
+package com.baeldung;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-@SpringBootApplication(scanBasePackages = "com.baeldung")
+@SpringBootApplication//(scanBasePackages = "com.baeldung")
 public class AuthorizationServerApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {

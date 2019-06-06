@@ -16,7 +16,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.baeldung.config.ResourceServerApplication;
+import com.baeldung.ResourceServerApplication;
 
 //Before running this test make sure authorization server is running   
 

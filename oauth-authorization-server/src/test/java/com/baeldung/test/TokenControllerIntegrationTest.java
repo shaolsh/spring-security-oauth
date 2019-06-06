@@ -23,7 +23,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.baeldung.config.AuthorizationServerApplication;
+import com.baeldung.AuthorizationServerApplication;
 import com.baeldung.controller.TokenController;
 
 @RunWith(SpringRunner.class)
