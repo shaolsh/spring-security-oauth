@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.baeldung.config.ResourceServerApplication;
+import com.baeldung.ResourceServerApplication;
 
 // Before running this live test make sure authorization server is running   
 

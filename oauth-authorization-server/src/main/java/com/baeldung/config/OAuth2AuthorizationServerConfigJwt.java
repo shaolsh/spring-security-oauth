@@ -29,13 +29,22 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
+    /**
+     * 配置AuthorizationServer安全认证的相关信息，创建ClientCredentialsTokenEndpointFilter核心过滤器 
+     */
     @Override
     public void configure(final AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+        // 让/oauth/token支持client_id以及client_secret作登录认证
+        //oauthServer.allowFormAuthenticationForClients();
         oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
     }
 
+    /**
+     * 配置OAuth2的客户端相关信息 
+     */
     @Override
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception { // @formatter:off
+        //clients.jdbc(dataSource);
         clients.inMemory()
                 .withClient("sampleClientId")
                 .authorizedGrantTypes("implicit")
@@ -66,6 +75,20 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
                 .redirectUris("http://www.example.com");
     } // @formatter:on
 
+    /**
+     * 配置身份认证器，配置认证方式，TokenStore，TokenGranter，OAuth2RequestFactory
+     */
+    @Override
+    public void configure(final AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
+
+        endpoints
+                .tokenStore(tokenStore())
+                .tokenEnhancer(tokenEnhancerChain)
+                .authenticationManager(authenticationManager);
+    }
+    
     @Bean
     @Primary
     public DefaultTokenServices tokenServices() {
@@ -75,13 +98,6 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
         return defaultTokenServices;
     }
 
-    @Override
-    public void configure(final AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        final TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
-        endpoints.tokenStore(tokenStore()).tokenEnhancer(tokenEnhancerChain).authenticationManager(authenticationManager);
-    }
-
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
@@ -89,7 +105,7 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
 
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
-        final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setSigningKey("123");
         // final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("mytest.jks"), "mypass".toCharArray());
         // converter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest"));
