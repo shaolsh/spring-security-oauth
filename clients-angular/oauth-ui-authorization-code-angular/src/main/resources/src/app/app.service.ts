@@ -4,12 +4,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
- 
+
 export class Foo {
   constructor(
     public id: number,
     public name: string) { }
-} 
+}
 
 @Injectable()
 export class AppService {
@@ -20,18 +20,19 @@ export class AppService {
     private _http: HttpClient){}
 
   retrieveToken(code){
-    let params = new URLSearchParams();   
+    let params = new URLSearchParams();
     params.append('grant_type','authorization_code');
     params.append('client_id', this.clientId);
+    params.append('client_secret', "secret");
     params.append('redirect_uri', this.redirectUri);
     params.append('code',code);
 
     let headers = new HttpHeaders({'Content-type': 'application/x-www-form-urlencoded; charset=utf-8', 'Authorization': 'Basic '+btoa(this.clientId+":secret")});
-     this._http.post('http://localhost:8081/spring-security-oauth-server/oauth/token', params.toString(), { headers: headers })
+     this._http.post('http://localhost:8088/oauth/token', params.toString(), { headers: headers })
     .subscribe(
       data => this.saveToken(data),
       err => alert('Invalid Credentials')
-    ); 
+    );
   }
 
   saveToken(token){
@@ -49,7 +50,7 @@ export class AppService {
 
   checkCredentials(){
     return Cookie.check('access_token');
-  } 
+  }
 
   logout() {
     Cookie.delete('access_token');
